@@ -16,13 +16,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Match not found" }, { status: 404 });
     }
 
-    // Check voting window
+    // Voting is open while the match is "upcoming" and hasn't kicked off yet.
+    // (vote_end_time in the DB may be stale; we rely on match_date as source of truth)
     const now = new Date();
-    const voteEndTime = new Date(match.vote_end_time);
+    const matchStartTime = new Date(match.match_date);
 
-    if (now > voteEndTime) {
+    if (match.status !== "upcoming" || now >= matchStartTime) {
       return NextResponse.json(
-        { error: "Voting window closed" },
+        { error: "Voting is closed for this match" },
         { status: 400 }
       );
     }

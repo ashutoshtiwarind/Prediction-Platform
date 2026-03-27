@@ -1,69 +1,38 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import { Match } from "@/lib/supabase";
-import { MatchCard } from "./components/MatchCard";
-import { PredictionModal } from "./components/PredictionModal";
 
-export default function HomePage() {
-  const router = useRouter();
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
+// Skip SSR for the interactive match list — useRouter requires the
+// client-side router context which isn't available during server rendering.
+const HomeClient = dynamic(() => import("./components/HomeClient"), {
+  ssr: false,
+  loading: () => (
+    <div className="text-center py-12">
+      <div className="inline-block w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+      <p className="text-gray-500 mt-3">Loading matches...</p>
+    </div>
+  ),
+});
 
-  useEffect(() => {
-    const fetchMatches = async () => {
-      try {
-        const res = await fetch("/api/matches");
-        const data = await res.json();
-        setMatches(data.matches || []);
-      } catch (error) {
-        console.error("Failed to fetch matches:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const storedUserId = localStorage.getItem("userId");
-    setUserId(storedUserId);
-    fetchMatches();
-  }, []);
-
-  const handlePredict = (match: Match) => {
-    if (!userId) {
-      localStorage.setItem("selectedMatchId", match.id);
-      router.push("/signup");
-      return;
-    }
-    setSelectedMatch(match);
-    setIsModalOpen(true);
-  };
-
-  const handleVote = async (team: string) => {
-    if (!userId || !selectedMatch) return;
-
-    const res = await fetch("/api/predictions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: userId,
-        match_id: selectedMatch.id,
-        predicted_team: team,
-      }),
+async function getMatches(): Promise<Match[]> {
+  try {
+    // Server-side fetch — works in both local dev and Vercel
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/api/matches`, {
+      cache: "no-store",
     });
-
+    if (!res.ok) return [];
     const data = await res.json();
+    return data.matches || [];
+  } catch {
+    return [];
+  }
+}
 
-    if (data.success) {
-      setIsModalOpen(false);
-      router.push(`/results?match_id=${selectedMatch.id}`);
-    } else {
-      alert(data.error || "Failed to create prediction");
-    }
-  };
+export default async function HomePage() {
+  const matches = await getMatches();
 
   return (
     <div>
@@ -103,23 +72,7 @@ export default function HomePage() {
       {/* Matches Section */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-6">Upcoming Matches</h2>
-
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-gray-500 mt-3">Loading matches...</p>
-          </div>
-        ) : matches.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-            <p className="text-4xl mb-3">🏏</p>
-            <p className="text-gray-600 font-semibold">No matches available yet</p>
-            <p className="text-gray-400 text-sm mt-1">Check back soon!</p>
-          </div>
-        ) : (
-          matches.map((match) => (
-            <MatchCard key={match.id} match={match} onPredict={handlePredict} />
-          ))
-        )}
+        <HomeClient initialMatches={matches} />
       </section>
 
       {/* How it works */}
@@ -179,14 +132,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* Modal */}
-      <PredictionModal
-        isOpen={isModalOpen}
-        match={selectedMatch}
-        onClose={() => setIsModalOpen(false)}
-        onVote={handleVote}
-      />
     </div>
   );
 }
