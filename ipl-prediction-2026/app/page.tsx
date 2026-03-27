@@ -52,15 +52,15 @@ export default async function HomePage() {
           <span className="text-white">THE AI</span>
         </h1>
 
-        <p className="text-gray-400 text-lg mb-2 max-w-sm mx-auto">
+        <p className="text-gray-400 text-base sm:text-lg mb-2 max-w-xs sm:max-w-sm mx-auto">
           Your cricket instincts <span className="text-white font-semibold">&gt;</span> cold algorithms
         </p>
-        <p className="text-gray-600 text-sm max-w-xs mx-auto mb-10">
-          Pick IPL match winners. Outpredict our AI. Climb the leaderboard. Zero money — pure bragging rights.
+        <p className="text-gray-600 text-sm max-w-[260px] sm:max-w-xs mx-auto mb-8 sm:mb-10">
+          Predict IPL winners · Climb the leaderboard · Zero money
         </p>
 
         {/* Stats row */}
-        <div className="flex justify-center gap-3 sm:gap-6 flex-wrap">
+        <div className="flex justify-center gap-2 sm:gap-6 flex-wrap">
           {[
             { value: "2.1L+", label: "Predictions", icon: "🎯", color: "from-red-500/20 to-red-500/5" },
             { value: "74%",   label: "Beat AI",     icon: "🤖", color: "from-green-500/20 to-green-500/5" },
@@ -68,7 +68,7 @@ export default async function HomePage() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className={`px-5 py-3 rounded-2xl bg-gradient-to-b ${stat.color} border border-white/[0.07] text-center min-w-[90px]`}
+              className={`px-3 sm:px-5 py-3 rounded-2xl bg-gradient-to-b ${stat.color} border border-white/[0.07] text-center min-w-[78px] sm:min-w-[90px]`}
             >
               <div className="text-xl mb-0.5">{stat.icon}</div>
               <div className="text-2xl font-display font-black text-white">{stat.value}</div>

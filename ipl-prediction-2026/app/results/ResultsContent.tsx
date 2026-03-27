@@ -174,43 +174,43 @@ export default function ResultsContent() {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {/* Your pick */}
           <div
-            className="p-4 rounded-xl text-center"
+            className="p-3 sm:p-4 rounded-xl text-center"
             style={{
               background: `${myTeamCfg.color}10`,
               border: `1px solid ${myTeamCfg.color}30`,
             }}
           >
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: myTeamCfg.color }}>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-2 sm:mb-3" style={{ color: myTeamCfg.color }}>
               Your Pick
             </p>
             <div className="flex justify-center mb-2">
               <TeamBadge team={prediction.predicted_team} size="md" />
             </div>
-            <p className="font-display font-black text-2xl text-white">{prediction.predicted_team}</p>
-            <p className="text-xs text-green-400 font-semibold mt-2">✓ Saved</p>
+            <p className="font-display font-black text-xl sm:text-2xl text-white">{prediction.predicted_team}</p>
+            <p className="text-xs text-green-400 font-semibold mt-1.5">✓ Saved</p>
           </div>
 
           {/* AI pick */}
           <div
-            className="p-4 rounded-xl text-center"
+            className="p-3 sm:p-4 rounded-xl text-center"
             style={{
               background: `${aiTeamCfg.color}08`,
               border: `1px solid ${aiTeamCfg.color}20`,
             }}
           >
-            <p className="text-xs font-bold uppercase tracking-widest mb-3 text-gray-500">
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-2 sm:mb-3 text-gray-500">
               AI&apos;s Pick
             </p>
             <div className="flex justify-center mb-2">
               <TeamBadge team={prediction.ai_predicted_team || match.team_1} size="md" />
             </div>
-            <p className="font-display font-black text-2xl text-white">
+            <p className="font-display font-black text-xl sm:text-2xl text-white">
               {prediction.ai_predicted_team || "—"}
             </p>
-            <p className="text-xs text-gray-500 mt-2">Pending result...</p>
+            <p className="text-xs text-gray-500 mt-1.5">Pending result...</p>
           </div>
         </div>
 
@@ -381,23 +381,23 @@ export default function ResultsContent() {
                         : "rgba(255,255,255,0.03)",
                     }}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className={`w-8 text-center text-lg ${!medal ? "text-gray-500 font-bold text-sm" : ""}`}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className={`w-7 shrink-0 text-center text-base ${!medal ? "text-gray-500 font-bold text-xs" : ""}`}>
                         {medal ?? `#${idx + 1}`}
                       </span>
-                      <div>
-                        <p className={`font-semibold ${isMe ? "text-red-400" : "text-white"}`}>
+                      <div className="min-w-0">
+                        <p className={`font-semibold truncate text-sm ${isMe ? "text-red-400" : "text-white"}`}>
                           {user.username} {isMe && <span className="text-xs text-gray-500">(you)</span>}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {user.total_correct}/{user.total_predictions} correct · {user.win_percentage}%
+                          {user.total_correct}/{user.total_predictions} · {user.win_percentage}%
                         </p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-display font-black text-lg text-white">
+                    <div className="text-right shrink-0">
+                      <p className="font-display font-black text-base text-white">
                         {user.total_points}
-                        <span className="text-xs text-gray-500 ml-1">pts</span>
+                        <span className="text-xs text-gray-500 ml-0.5">pts</span>
                       </p>
                     </div>
                   </div>

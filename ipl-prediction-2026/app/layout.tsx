@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${space.variable}`} style={{ colorScheme: "dark" }}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content="#07111F" />
       </head>
@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </nav>
 
         {/* Main content */}
-        <main className="relative z-10 max-w-5xl mx-auto px-4 py-6">
+        <main className="relative z-10 max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
           {children}
         </main>
 

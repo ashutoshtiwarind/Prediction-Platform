@@ -149,10 +149,10 @@ export function MatchCard({ match, onPredict }: MatchCardProps) {
         </div>
 
         {/* Venue & Date */}
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-4 px-1">
-          <span>📍 {match.venue}, {match.city}</span>
-          <span>
-            {new Date(match.match_date).toLocaleString("en-IN", {
+        <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-0.5 text-xs text-gray-500 mb-4 px-1">
+          <span className="truncate">📍 {match.venue}, {match.city}</span>
+          <span className="shrink-0 text-gray-600">
+            🗓 {new Date(match.match_date).toLocaleString("en-IN", {
               day: "numeric",
               month: "short",
               hour: "2-digit",
