@@ -10,7 +10,9 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match, onPredict }: MatchCardProps) {
-  const votingOpen = new Date() < new Date(match.vote_end_time);
+  // Voting is open when: match is upcoming AND match hasn't started yet
+  const votingOpen =
+    match.status === "upcoming" && new Date() < new Date(match.match_date);
 
   return (
     <Card className="mb-6">

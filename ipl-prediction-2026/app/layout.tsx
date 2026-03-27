@@ -21,11 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ colorScheme: "light" }}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="light" />
       </head>
-      <body className="bg-gray-50">
+      <body className="bg-gray-50 min-h-screen">
         <nav className="bg-white shadow-sm sticky top-0 z-40">
           <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
             <div className="text-xl font-bold text-gray-900">

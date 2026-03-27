@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     --color-primary: #1f2937;
     --color-accent: #ef4444;
     --color-success: #10b981;
@@ -11,8 +12,12 @@
     --color-error: #ef4444;
   }
 
+  html {
+    color-scheme: light;
+  }
+
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-gray-50 text-gray-900;
   }
 }
 

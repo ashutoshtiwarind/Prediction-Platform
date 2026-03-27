@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/Button";
 import { Card } from "@/app/components/Card";
 
+const IS_DEV = process.env.NODE_ENV !== "production";
+const DEV_OTP = "123456";
+
 type Step = "phone" | "otp" | "username";
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("");
@@ -82,12 +85,10 @@ export default function SignupPage() {
         localStorage.setItem("userId", data.user_id);
         localStorage.setItem("username", username);
 
-        const matchId = localStorage.getItem("selectedMatchId");
-        if (matchId) {
-          router.push(`/results?match_id=${matchId}`);
-        } else {
-          router.push("/");
-        }
+        // After signup, go back to home so the user can submit their prediction.
+        // HomeClient reads userId from localStorage and will show the prediction
+        // modal when they click BEAT THE AI (match is still stored in localStorage).
+        router.push("/");
       } else {
         setError(data.error || "Failed to create account");
       }
@@ -106,6 +107,22 @@ export default function SignupPage() {
 
   return (
     <div className="max-w-md mx-auto py-12">
+      {/* Dev mode banner */}
+      {IS_DEV && (
+        <div className="mb-6 px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2 text-sm">
+          <span className="text-lg leading-none">🛠️</span>
+          <div>
+            <p className="font-semibold text-amber-800">Dev Mode — Phone auth bypassed</p>
+            <p className="text-amber-700 mt-0.5">
+              Use any valid phone number. When asked for OTP, enter{" "}
+              <code className="bg-amber-100 px-1.5 py-0.5 rounded font-mono font-bold">
+                {DEV_OTP}
+              </code>
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold mb-2">Join The Community</h1>
         <p className="text-gray-500 text-sm">{stepLabels[step]}</p>
@@ -270,5 +287,13 @@ export default function SignupPage() {
         By signing up you agree to our Terms. No spam, no money, just cricket.
       </p>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-gray-400">Loading...</div>}>
+      <SignupForm />
+    </Suspense>
   );
 }
